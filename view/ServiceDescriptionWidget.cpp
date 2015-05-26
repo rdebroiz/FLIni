@@ -40,39 +40,39 @@ ServiceDescriptionWidget::~ServiceDescriptionWidget()
 void
 ServiceDescriptionWidget::setName(QString const &name)
 {
+    this->blockSignals(true);
     m_nameLine->setText(name);
+    this->blockSignals(false);
 }
 
 void
 ServiceDescriptionWidget::setExeType(QString const &exeType)
 {
+    this->blockSignals(true);
     m_exTypeLine->setText(exeType);
+    this->blockSignals(false);
 }
 
 void
 ServiceDescriptionWidget::setPath(QString const &path)
 {
+    this->blockSignals(true);
     m_pathLine->setText(path);
+    this->blockSignals(false);
 }
 
 void
 ServiceDescriptionWidget::setMainFunction(QString const &mainFunction)
 {
-     m_mainFunctionLine->setText(mainFunction);
+    this->blockSignals(true);
+    m_mainFunctionLine->setText(mainFunction);
+    this->blockSignals(false);
 }
 
 void
 ServiceDescriptionWidget::setDetail(QString const &detail)
 {
+    this->blockSignals(true);
     m_detailLine->setText(detail);
-}
-
-void
-ServiceDescriptionWidget::fillFromServiceName(const ServiceName &serviceName)
-{
-    this->setName(serviceName.name);
-    this->setExeType(serviceName.exeType);
-    this->setPath(serviceName.path);
-    this->setMainFunction(serviceName.mainFunction);
-    this->setDetail(serviceName.detail);
+    this->blockSignals(false);
 }

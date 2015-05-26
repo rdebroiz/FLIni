@@ -2,11 +2,9 @@
 
 #include <QGroupBox>
 
-#include "IniDocumentModel.h"
-
 #include <QLineEdit>
-#include <QTextEdit>
 
+#include "IniDocumentModel.h"
 
 class ServiceDescriptionWidget : public QGroupBox
 {
@@ -23,18 +21,18 @@ public:
     ServiceDescriptionWidget(QWidget *parent = NULL);
     virtual ~ServiceDescriptionWidget();
 
+public slots:
     void setName(QString const &name);
     void setExeType(QString const &exeType);
     void setPath(QString const &path);
     void setMainFunction(QString const &mainFunction);
     void setDetail(QString const &detail);
 
-    void fillFromServiceName(ServiceName const &serviceName);
 
 signals:
-    void nameChanged(QString name);
-    void exeTypeChanged(QString name);
-    void pathChanged(QString name);
-    void mainFunctionChanged(QString name);
-    void detailChanged(QString name);
+    void nameChanged(QString const&);
+    void exeTypeChanged(QString const&);
+    void pathChanged(QString const&);
+    void mainFunctionChanged(QString const&);
+    void detailChanged(QString const&);
 };
