@@ -20,7 +20,6 @@ set(${PROJECT_NAME}_CPP
     main.cpp
     MainWindow.cpp
     model/IniDocumentModel.cpp
-    model/IniDocumentIO.cpp
     presenter/IniDocumentPresenter.cpp
     view/MainWidget.cpp
     view/ServiceDescriptionWidget.cpp
@@ -28,6 +27,7 @@ set(${PROJECT_NAME}_CPP
     view/FieldListWidget.cpp
     view/DocumentPreviewWidget.cpp
     view/CommandWidget.cpp
+    view/GroupWidget.cpp
     )
 
 set(${PROJECT_NAME}_H
@@ -41,6 +41,7 @@ set(${PROJECT_NAME}_H
     view/FieldDescriptionWidget.h
     view/DocumentPreviewWidget.h
     view/CommandWidget.h
+    view/GroupWidget.cpp
     )
 
 add_executable(${PROJECT_NAME}

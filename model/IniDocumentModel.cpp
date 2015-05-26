@@ -4,163 +4,27 @@
 
 #include <QDebug>
 
-// ServiceName ---------------------------------------------
+// IniGroup ------------------------------------------------
 
 QString
-ServiceName::name() const
+
+IniGroup::keys()
 {
-    return m_name;
+    return m_keys;
 }
 
-QString
-ServiceName::exeType() const
+IniGroup::entry(const QString &key) const
 {
-    return m_exeType;
-}
-
-QString
-ServiceName::path() const
-{
-    return m_path;
-}
-
-QString
-ServiceName::mainFunction() const
-{
-    return m_mainFunction;
-}
-
-QString
-ServiceName::detail() const
-{
-    return m_detail;
+    return m_entries[key];
 }
 
 void
-ServiceName::setName(QString const& name)
+IniGroup::setEntry(const QString &key, const QString &value)
 {
-    m_name = name;
-    emit nameChanged(m_name);
-}
-
-void
-ServiceName::setExeType(QString const& exeType)
-{
-    m_exeType = exeType;
-    emit exeTypeChanged(exeType);
-}
-
-void
-ServiceName::setPath(QString const& path)
-{
-    m_path = path;
-    emit pathChanged(m_path);
-}
-
-void
-ServiceName::setMainFunction(QString const& mainFunction)
-{
-    m_mainFunction = mainFunction;
-    emit mainFunctionChanged(mainFunction);
-}
-void
-ServiceName::setDetail(QString const& detail)
-{
-    m_detail = detail;
-    emit detailChanged(detail);
-}
-
-// Field ---------------------------------------------------
-
-QString
-Field::name() const
-{
-    return m_name;
-}
-
-QString
-Field::type() const
-{
-    return m_type;
-}
-
-QString
-Field::switchCmd() const
-{
-    return m_switchCmd;
-}
-
-QString
-Field::range() const
-{
-    return m_range;
-}
-
-QString
-Field::defaultValue() const
-{
-    return m_defaultValue;
-}
-
-QString
-Field::opt() const
-{
-    return m_opt;
-}
-
-QString
-Field::detail() const
-{
-    return m_detail;
-}
-
-void
-Field::setName(const QString &name)
-{
-    m_name = name;
-    emit nameChanged(m_name);
-}
-
-void
-Field::setType(const QString &type)
-{
-    m_type = type;
-    emit typeChanged(m_type);
-}
-
-void
-Field::setSwitchCmd(const QString &switchCmd)
-{
-    m_switchCmd = switchCmd;
-    emit switchCmdChanged(switchCmd);
-}
-
-void
-Field::setRange(const QString &range)
-{
-    m_range = range;
-    emit rangeChanged(m_range);
-}
-
-void
-Field::setDefaultValue(const QString &defaultValue)
-{
-    m_defaultValue = defaultValue;
-    emit defaultValueChanged(m_defaultValue);
-}
-
-void
-Field::setOpt(const QString &opt)
-{
-    m_opt = opt;
-    emit optChanged(m_opt);
-}
-
-void
-Field::setDetail(const QString &detail)
-{
-    m_detail = detail;
-    emit detailChanged(detail);
+    if(!m_keys.contains(key))
+        m_keys << key;
+    m_entries[key] = value;
+    emit entryChanged(key, value);
 }
 
 // IninDocumentModel ---------------------------------------
@@ -168,8 +32,14 @@ Field::setDetail(const QString &detail)
 IniDocumentModel::IniDocumentModel(QObject *parent) :
     QObject(parent)
 {
-    m_serviceName = new ServiceName;
-    m_fieldList << new Field;
+    m_serviceName = new IniGroup(this);
+    m_serviceName->setEntry("name", "");
+    m_serviceName->setEntry("exeType", "");
+    m_serviceName->setEntry("path", "");
+    m_serviceName->setEntry("mainFunction", "");
+    m_serviceName->setEntry("detail", "");
+
+    this->insertField(0);
 }
 
 
@@ -177,7 +47,7 @@ IniDocumentModel::~IniDocumentModel()
 {
     delete m_serviceName;
     // QList auto deallocate raw pointer in destructor.
-    m_fieldList.clear();
+    m_fields.clear();
 }
 
 ServiceName*
@@ -187,70 +57,58 @@ IniDocumentModel::serviceName() const
 }
 
 void
-IniDocumentModel::setServiceName(ServiceName*  serviceName)
+IniDocumentModel::setServiceName(IniGroup* serviceName)
 {
     m_serviceName = serviceName;
-
-    connect(m_serviceName, SIGNAL(nameChanged(QString)),
-            this, SIGNAL(serviceNameNameChanged(QString)));
-    connect(m_serviceName, SIGNAL(exeTypeChanged(QString)),
-            this, SIGNAL(serviceNameExeTypeChanged(QString)));
-    connect(m_serviceName, SIGNAL(pathChanged(QString)),
-            this, SIGNAL(serviceNamePathChanged(QString)));
-    connect(m_serviceName, SIGNAL(mainFunctionChanged(QString)),
-            this, SIGNAL(serviceNameMainFunctionChanged(QString)));
-    connect(m_serviceName, SIGNAL(detailChanged(QString)),
-            this, SIGNAL(serviceNameDetailChanged(QString)));
+    connect(m_serviceName, SIGNAL(entryChanged(QString,QString)),
+            this, SIGNAL(serviceNameChanged(QString, QString)));
 }
 
-Field*
-IniDocumentModel::field(unsigned int index) const
+IniGroup*
+IniDocumentModel::field(unsigned int idx) const
 {
-    Field *f = NULL;
+    IniGroup *f = NULL;
     if(!(index < m_fieldList.count()))
 //        qDebug() << "IniDocumentModel:: Attempt to retrieve non existing field.";
         ;
     else
-        f = m_fieldList[index];
+        f = m_fields[idx];
 
     return f;
 }
 
-QList<Field* >
+QList<IniGroup* >
 IniDocumentModel::allFields() const
 {
-    return m_fieldList;
+    return m_fields;
 }
 
-Field*
-IniDocumentModel::insertField(unsigned int index)
+IniGroup*
+IniDocumentModel::insertField(unsigned int idx)
 {
-    Field* field = new Field;
+    IniGroup* field = new IniGroup(this);
+    field->setEntry("name", "");
+    field->setEntry("type", "");
+    field->setEntry("switchCmd", "");
+    field->setEntry("range", "");
+    field->setEntry("defaultValue", "");
+    field->setEntry("opt", "");
+    field->setEntry("detail", "");
 
-    m_fieldList.insert(index, field);
+    m_fields.insert(idx, field);
 
-    connect(field, SIGNAL(nameChanged(QString)),
-            this, SLOT(_emitFieldNameChanged(QString)));
-    connect(field, SIGNAL(typeChanged(QString)),
-            this, SLOT(_emitFieldTypeChanged(QString)));
-    connect(field, SIGNAL(switchCmdChanged(QString)),
-            this, SLOT(_emitFieldSwitchCmdChanged(QString)));
-    connect(field, SIGNAL(rangeChanged(QString)),
-            this, SLOT(_emitFieldRangeChanged(QString)));
-    connect(field, SIGNAL(defaultValueChanged(QString)),
-            this, SLOT(_emitFieldDefaultValueChanged(QString)));
-    connect(field, SIGNAL(optChanged(QString)),
-            this, SLOT(_emitFieldOptChanged(QString)));
-    connect(field, SIGNAL(detailChanged(QString)),
-            this, SLOT(_emitFieldDetailChanged(QString)));
+    connect(field, SIGNAL(entryChanged(QString,QString)),
+            this, SLOT(_emitFieldChanged(QString,QString)));
 
+    emit fieldAdded(idx);
     return field;
 }
 
 void
-IniDocumentModel::removeField(unsigned int index)
+IniDocumentModel::removeField(unsigned int idx)
 {
-    m_fieldList.removeAt(index);
+    m_fields.removeAt(idx);
+    emit fiedRemoved(idx);
 }
 
 QString
@@ -263,81 +121,16 @@ void
 IniDocumentModel::setFilename(const QString &filename)
 {
     m_filename = filename;
+    emit filenameChanged(filename);
 }
 
 void
-IniDocumentModel::_emitFieldNameChanged(const QString& name)
+IniDocumentModel::_emitFieldChanged(const QString &key, const QString &value)
 {
-    Field *field = qobject_cast<Field *>(QObject::sender());
+    IniGroup *field = qobject_cast<IniGroup *>(QObject::sender());
     if(field)
     {
-        int idx = m_fieldList.indexOf(field);
-        emit fieldNameChanged(idx, name);
-    }
-}
-
-void
-IniDocumentModel::_emitFieldTypeChanged(const QString &type)
-{
-    Field *field = qobject_cast<Field *>(QObject::sender());
-    if(field)
-    {
-        int idx = m_fieldList.indexOf(field);
-        emit fieldTypeChanged(idx, type);
-    }
-}
-
-void
-IniDocumentModel::_emitFieldSwitchCmdChanged(const QString &switchCmd)
-{
-    Field *field = qobject_cast<Field *>(QObject::sender());
-    if(field)
-    {
-        int idx = m_fieldList.indexOf(field);
-        emit fieldSwitchCmdChanged(idx, switchCmd);
-    }
-}
-
-void
-IniDocumentModel::_emitFieldRangeChanged(const QString &range)
-{
-    Field *field = qobject_cast<Field *>(QObject::sender());
-    if(field)
-    {
-        int idx = m_fieldList.indexOf(field);
-        emit fieldRangeChanged(idx, range);
-    }
-}
-
-void
-IniDocumentModel::_emitFieldDefaultValueChanged(const QString &defaultValue)
-{
-    Field *field = qobject_cast<Field *>(QObject::sender());
-    if(field)
-    {
-        int idx = m_fieldList.indexOf(field);
-        emit fieldDefaultValueChanged(idx, defaultValue);
-    }
-}
-
-void
-IniDocumentModel::_emitFieldOptChanged(const QString &opt)
-{
-    Field *field = qobject_cast<Field *>(QObject::sender());
-    if(field)
-    {
-        int idx = m_fieldList.indexOf(field);
-        emit fieldOptChanged(idx, opt);
-    }
-}
-
-void
-IniDocumentModel::_emitFieldDetailChanged(const QString &detail)
-{
-    Field *field = qobject_cast<Field *>(QObject::sender());
-    if(field)
-    {
-        int idx = m_fieldList.indexOf(field);
-        emit fieldDetailChanged(idx, detail);
+        int idx = m_fields.indexOf(field);
+        emit fieldNameChanged(idx, key, value);
     }
 }
