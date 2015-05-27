@@ -12,8 +12,10 @@ public:
 
 private slots:
     void _openFile();
+    void _saveAsFile();
 
 signals:
-    void openFileRequest(QString fileName);
+    void openFileRequest(QString const& fileName);
+    void saveAsFileRequest(QString const& filename);
 
 };

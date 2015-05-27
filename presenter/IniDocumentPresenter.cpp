@@ -271,6 +271,12 @@ IniDocumentPresenter::openIniDocument(const QString &filename)
     emit modelContentChanged(IniDocumentIO::write(m_model));
 }
 
+void
+IniDocumentPresenter::saveIniDocument(QString const& filename)
+{
+    IniDocumentIO::write(m_model, filename);
+}
+
 MainWidget*
 IniDocumentPresenter::_buildMainWidget() const
 {
@@ -291,6 +297,8 @@ IniDocumentPresenter::_buildCommandWidget() const
 
     connect(commandWidget, SIGNAL(openFileRequest(QString)),
             this, SLOT(openIniDocument(QString)));
+    connect(commandWidget, SIGNAL(saveAsFileRequest(QString)),
+            this, SLOT(saveIniDocument(QString)));
 
     return commandWidget;
 }

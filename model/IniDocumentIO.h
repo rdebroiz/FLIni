@@ -3,6 +3,7 @@
 #include <QString>
 #include <QStringList>
 #include <QSettings>
+#include <QFile>
 
 #include "IniDocumentModel.h"
 
@@ -96,6 +97,19 @@ QString write(IniDocumentModel *model)
             text += "detail=" + fldList[idx]->detail() + ";\n\n";
         }
     }
+    return text;
+}
+
+QString write(IniDocumentModel *model, QString const& filename)
+{
+    QString text = write(model);
+
+    QFile file(filename);
+    file.open(QIODevice::WriteOnly | QIODevice::Text);
+    QTextStream stream(&file);
+    stream << text;
+    file.close();
+
     return text;
 }
 

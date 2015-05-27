@@ -31,6 +31,7 @@ public:
 
 public slots:
     void openIniDocument(const QString &filename);
+    void saveIniDocument(const QString &filename);
 
     void changeServiceNameName(QString const &name);
     void changeServiceNameExeType(QString const &exeType);
