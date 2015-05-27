@@ -175,7 +175,8 @@ IniDocumentModel::IniDocumentModel(QObject *parent) :
 
 IniDocumentModel::~IniDocumentModel()
 {
-    delete m_serviceName;
+    if(!m_serviceName.isNull())
+        m_serviceName->deleteLater();
     // QList auto deallocate raw pointer in destructor.
     m_fieldList.clear();
 }
@@ -269,7 +270,7 @@ void
 IniDocumentModel::_emitFieldNameChanged(const QString& name)
 {
     Field *field = qobject_cast<Field *>(QObject::sender());
-    if(field)
+    if(field != NULL)
     {
         int idx = m_fieldList.indexOf(field);
         emit fieldNameChanged(idx, name);
@@ -280,7 +281,7 @@ void
 IniDocumentModel::_emitFieldTypeChanged(const QString &type)
 {
     Field *field = qobject_cast<Field *>(QObject::sender());
-    if(field)
+    if(field != NULL)
     {
         int idx = m_fieldList.indexOf(field);
         emit fieldTypeChanged(idx, type);
@@ -291,7 +292,7 @@ void
 IniDocumentModel::_emitFieldSwitchCmdChanged(const QString &switchCmd)
 {
     Field *field = qobject_cast<Field *>(QObject::sender());
-    if(field)
+    if(field != NULL)
     {
         int idx = m_fieldList.indexOf(field);
         emit fieldSwitchCmdChanged(idx, switchCmd);
@@ -302,7 +303,7 @@ void
 IniDocumentModel::_emitFieldRangeChanged(const QString &range)
 {
     Field *field = qobject_cast<Field *>(QObject::sender());
-    if(field)
+    if(field != NULL)
     {
         int idx = m_fieldList.indexOf(field);
         emit fieldRangeChanged(idx, range);
@@ -313,7 +314,7 @@ void
 IniDocumentModel::_emitFieldDefaultValueChanged(const QString &defaultValue)
 {
     Field *field = qobject_cast<Field *>(QObject::sender());
-    if(field)
+    if(field != NULL)
     {
         int idx = m_fieldList.indexOf(field);
         emit fieldDefaultValueChanged(idx, defaultValue);
@@ -324,7 +325,7 @@ void
 IniDocumentModel::_emitFieldOptChanged(const QString &opt)
 {
     Field *field = qobject_cast<Field *>(QObject::sender());
-    if(field)
+    if(field != NULL)
     {
         int idx = m_fieldList.indexOf(field);
         emit fieldOptChanged(idx, opt);
@@ -335,7 +336,7 @@ void
 IniDocumentModel::_emitFieldDetailChanged(const QString &detail)
 {
     Field *field = qobject_cast<Field *>(QObject::sender());
-    if(field)
+    if(field != NULL)
     {
         int idx = m_fieldList.indexOf(field);
         emit fieldDetailChanged(idx, detail);

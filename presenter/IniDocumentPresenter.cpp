@@ -30,7 +30,7 @@ IniDocumentPresenter::setModel(IniDocumentModel *model)
 {
     if(!m_model.isNull())
     {
-        delete m_model;
+        m_model->deleteLater();
     }
 
     m_model = model;

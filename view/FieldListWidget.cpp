@@ -63,7 +63,8 @@ FieldListWidget::removeFieldDescriptionWidget(unsigned int idx)
 {
     m_fieldWidgetList.removeAt(idx);
     QLayoutItem *itm = m_mainLayout->takeAt(idx);
-    itm->widget()->deleteLater();
+    if(itm->widget() != NULL)
+        itm->widget()->deleteLater();
 
     this->_updateTitles();
     this->_updateRemoveAbility();
@@ -74,7 +75,10 @@ FieldListWidget::clear()
 {
     m_fieldWidgetList.clear();
     while(QLayoutItem *itm = m_mainLayout->takeAt(0))
-        itm->widget()->deleteLater();
+    {
+        if(itm->widget() != NULL)
+            itm->widget()->deleteLater();
+    }
 }
 
 void
@@ -167,7 +171,7 @@ void
 FieldListWidget::_emitAddFieldRequest()
 {
     FieldDescriptionWidget *fieldDescriptionWidget = qobject_cast<FieldDescriptionWidget *>(QObject::sender());
-    if(fieldDescriptionWidget)
+    if(fieldDescriptionWidget != NULL)
     {
         int idx = m_fieldWidgetList.indexOf(fieldDescriptionWidget);
         emit addFieldRequest(idx);
@@ -178,7 +182,7 @@ void
 FieldListWidget::_emitRemoveFieldRequest()
 {
     FieldDescriptionWidget *fieldDescriptionWidget = qobject_cast<FieldDescriptionWidget *>(QObject::sender());
-    if(fieldDescriptionWidget)
+    if(fieldDescriptionWidget != NULL)
     {
         int idx = m_fieldWidgetList.indexOf(fieldDescriptionWidget);
         emit removeFieldRequest(idx);
@@ -189,7 +193,7 @@ void
 FieldListWidget::_emitNameChanged(QString const& name)
 {
     FieldDescriptionWidget *fieldDescriptionWidget = qobject_cast<FieldDescriptionWidget *>(QObject::sender());
-    if(fieldDescriptionWidget)
+    if(fieldDescriptionWidget != NULL)
     {
         int idx = m_fieldWidgetList.indexOf(fieldDescriptionWidget);
         emit nameChanged(idx, name);
@@ -200,7 +204,7 @@ void
 FieldListWidget::_emitTypeChanged(QString const& type)
 {
     FieldDescriptionWidget *fieldDescriptionWidget = qobject_cast<FieldDescriptionWidget *>(QObject::sender());
-    if(fieldDescriptionWidget)
+    if(fieldDescriptionWidget != NULL)
     {
         int idx = m_fieldWidgetList.indexOf(fieldDescriptionWidget);
         emit typeChanged(idx, type);
@@ -211,7 +215,7 @@ void
 FieldListWidget::_emitSwitchCmdChanged(QString const& switchCmd)
 {
     FieldDescriptionWidget *fieldDescriptionWidget = qobject_cast<FieldDescriptionWidget *>(QObject::sender());
-    if(fieldDescriptionWidget)
+    if(fieldDescriptionWidget != NULL)
     {
         int idx = m_fieldWidgetList.indexOf(fieldDescriptionWidget);
         emit switchCmdChanged(idx, switchCmd);
@@ -222,7 +226,7 @@ void
 FieldListWidget::_emitRangeChanged(QString const&  range)
 {
     FieldDescriptionWidget *fieldDescriptionWidget = qobject_cast<FieldDescriptionWidget *>(QObject::sender());
-    if(fieldDescriptionWidget)
+    if(fieldDescriptionWidget != NULL)
     {
         int idx = m_fieldWidgetList.indexOf(fieldDescriptionWidget);
         emit rangeChanged(idx, range);
@@ -233,7 +237,7 @@ void
 FieldListWidget::_emitDefaultValueChanged(QString const& defaultValue)
 {
     FieldDescriptionWidget *fieldDescriptionWidget = qobject_cast<FieldDescriptionWidget *>(QObject::sender());
-    if(fieldDescriptionWidget)
+    if(fieldDescriptionWidget != NULL)
     {
         int idx = m_fieldWidgetList.indexOf(fieldDescriptionWidget);
         emit defaultValueChanged(idx, defaultValue);
@@ -244,7 +248,7 @@ void
 FieldListWidget::_emitOptChanged(QString const& opt)
 {
     FieldDescriptionWidget *fieldDescriptionWidget = qobject_cast<FieldDescriptionWidget *>(QObject::sender());
-    if(fieldDescriptionWidget)
+    if(fieldDescriptionWidget != NULL)
     {
         int idx = m_fieldWidgetList.indexOf(fieldDescriptionWidget);
         emit optChanged(idx, opt);
@@ -255,7 +259,7 @@ void
 FieldListWidget::_emitDetailChanged(QString const& detail)
 {
     FieldDescriptionWidget *fieldDescriptionWidget = qobject_cast<FieldDescriptionWidget *>(QObject::sender());
-    if(fieldDescriptionWidget)
+    if(fieldDescriptionWidget != NULL)
     {
         int idx = m_fieldWidgetList.indexOf(fieldDescriptionWidget);
         emit detailChanged(idx, detail);

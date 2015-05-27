@@ -20,7 +20,6 @@ set(${PROJECT_NAME}_CPP
     main.cpp
     MainWindow.cpp
     model/IniDocumentModel.cpp
-    model/IniDocumentIO.cpp
     presenter/IniDocumentPresenter.cpp
     view/MainWidget.cpp
     view/ServiceDescriptionWidget.cpp

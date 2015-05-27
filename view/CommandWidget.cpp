@@ -33,7 +33,6 @@ CommandWidget::_openFile()
                                                     tr("Open Ini Document"),
                                                     openFileDir,
                                                     tr("Ini (*.ini)"));
-
     // If user doesn't cancel.
     if(!filename.isEmpty())
     {

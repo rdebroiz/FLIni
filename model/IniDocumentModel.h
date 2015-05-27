@@ -1,7 +1,8 @@
 #pragma once
 
-#include <QSettings>
-#include <QRegExp>
+#include <QObject>
+#include <QPointer>
+#include <QString>
 
 
 class ServiceName: public QObject
@@ -85,7 +86,7 @@ class IniDocumentModel : public QObject
     Q_OBJECT
 
 private:
-    ServiceName *m_serviceName;
+    QPointer<ServiceName> m_serviceName;
     QList<Field *> m_fieldList;
 
     QString m_filename;

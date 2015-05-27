@@ -59,7 +59,8 @@ MainWidget::setServiceDescriptionWidget(ServiceDescriptionWidget *widget)
     if(m_leftPannelLayout->count() > 1)
     {
         QLayoutItem *itm = m_leftPannelLayout->takeAt(0);
-        itm->widget()->deleteLater();
+        if(itm->widget() != NULL)
+            itm->widget()->deleteLater();
     }
     m_leftPannelLayout->insertWidget(0, widget, Qt::AlignTop);
     widget->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Maximum);
@@ -76,7 +77,10 @@ void
 MainWidget::setCommandWidget(CommandWidget *widget)
 {
     if(QLayoutItem *itm = m_rightPannelLayout->itemAt(0))
-        delete itm->widget();
+    {
+        if(itm->widget() != NULL)
+            itm->widget()->deleteLater();
+    }
     m_rightPannelLayout->insertWidget(0, widget, Qt::AlignTop);
     widget->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Maximum);
 }
@@ -85,7 +89,10 @@ void
 MainWidget::setDocumentPreviewDescriptionWidget(DocumentPreviewWidget *widget)
 {
     if(QLayoutItem *itm = m_rightPannelLayout->itemAt(1))
-        delete itm->widget();
+    {
+        if(itm->widget() != NULL)
+            itm->widget()->deleteLater();
+    }
     m_rightPannelLayout->insertWidget(1, widget);
     widget->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Minimum);
 }
